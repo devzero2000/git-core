@@ -9,7 +9,7 @@ modify () {
 	mv "$2.x" "$2"
 }
 
-D=`pwd`
+D=$(pwd)
 
 test_expect_success setup '
 
@@ -94,9 +94,9 @@ test_expect_success 'test . as a remote' '
 	echo updated >file &&
 	git commit -a -m updated &&
 	git checkout copy &&
-	test `cat file` = file &&
+	test $(cat file) = file &&
 	git pull &&
-	test `cat file` = updated
+	test $(cat file) = updated
 '
 
 test_expect_success 'the default remote . should not break explicit pull' '
@@ -105,9 +105,9 @@ test_expect_success 'the default remote . should not break explicit pull' '
 	git commit -a -m modified &&
 	git checkout copy &&
 	git reset --hard HEAD^ &&
-	test `cat file` = file &&
+	test $(cat file) = file &&
 	git pull . second &&
-	test `cat file` = modified
+	test $(cat file) = modified
 '
 
 test_expect_success '--rebase' '
