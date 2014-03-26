@@ -117,7 +117,7 @@ test_expect_success 'merge blue into white (A->B, mod A, A untracked)' \
 		echo "BAD: A does not exist in working directory"
 		return 1
 	}
-	test `cat A` = dirty || {
+	test $(cat A) = dirty || {
 		echo "BAD: A content is wrong"
 		return 1
 	}
