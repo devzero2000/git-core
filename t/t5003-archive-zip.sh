@@ -65,7 +65,7 @@ test_expect_success \
     'add files to repository' \
     'find a -type f | xargs git update-index --add &&
      find a -type l | xargs git update-index --add &&
-     treeid=`git write-tree` &&
+     treeid=$(git write-tree) &&
      echo $treeid >treeid &&
      git update-ref HEAD $(TZ=GMT GIT_COMMITTER_DATE="2005-05-27 22:00:00" \
      git commit-tree $treeid </dev/null)'
