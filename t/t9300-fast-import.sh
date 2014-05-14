@@ -170,10 +170,10 @@ test_expect_success 'A: verify tag/series-A-blob' '
 '
 
 cat >expect <<EOF
-:2 `git rev-parse --verify master:file2`
-:3 `git rev-parse --verify master:file3`
-:4 `git rev-parse --verify master:file4`
-:5 `git rev-parse --verify master^0`
+:2 $(git rev-parse --verify master:file2)
+:3 $(git rev-parse --verify master:file3)
+:4 $(git rev-parse --verify master:file4)
+:5 $(git rev-parse --verify master^0)
 EOF
 test_expect_success \
 	'A: verify marks output' \
@@ -264,8 +264,8 @@ git diff-tree -M -r master verify--import-marks >actual
 test_expect_success \
 	'A: verify diff' \
 	'compare_diff_raw expect actual &&
-	 test `git rev-parse --verify master:file2` \
-	    = `git rev-parse --verify verify--import-marks:copy-of-file2`'
+	 test $(git rev-parse --verify master:file2) \
+	    = $(git rev-parse --verify verify--import-marks:copy-of-file2)'
 
 test_tick
 mt=$(git hash-object --stdin < /dev/null)
@@ -390,7 +390,7 @@ test_expect_success \
     'B: accept branch name "TEMP_TAG"' \
     'git fast-import <input &&
 	 test -f .git/TEMP_TAG &&
-	 test `git rev-parse master` = `git rev-parse TEMP_TAG^`'
+	 test $(git rev-parse master` = `git rev-parse TEMP_TAG^)'
 rm -f .git/TEMP_TAG
 
 git gc 2>/dev/null >/dev/null
@@ -496,8 +496,8 @@ git update-ref -d refs/heads/invalid-committer || true
 ### series C
 ###
 
-newf=`echo hi newf | git hash-object -w --stdin`
-oldf=`git rev-parse --verify master:file2`
+newf=$(echo hi newf | git hash-object -w --stdin)
+oldf=$(git rev-parse --verify master:file2)
 test_tick
 cat >input <<INPUT_END
 commit refs/heads/branch
@@ -523,11 +523,11 @@ test_expect_success 'C: verify pack' '
 
 test_expect_success \
 	'C: validate reuse existing blob' \
-	'test $newf = `git rev-parse --verify branch:file2/newf` &&
-	 test $oldf = `git rev-parse --verify branch:file2/oldf`'
+	'test $newf = $(git rev-parse --verify branch:file2/newf) &&
+	 test $oldf = $(git rev-parse --verify branch:file2/oldf)'
 
 cat >expect <<EOF
-parent `git rev-parse --verify master^0`
+parent $(git rev-parse --verify master^0)
 author $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
 committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
 
@@ -643,7 +643,7 @@ test_expect_success \
 ### series F
 ###
 
-old_branch=`git rev-parse --verify branch^0`
+old_branch=$(git rev-parse --verify branch^0)
 test_tick
 cat >input <<INPUT_END
 commit refs/heads/branch
@@ -665,7 +665,7 @@ test_expect_success \
 		echo BAD gfi did not fail
 		return 1
 	 else
-		if test $old_branch = `git rev-parse --verify branch^0`
+		if test $old_branch = $(git rev-parse --verify branch^0)
 		then
 			: branch unaffected and failure returned
 			return 0
@@ -681,8 +681,8 @@ test_expect_success 'F: verify pack' '
 '
 
 cat >expect <<EOF
-tree `git rev-parse branch~1^{tree}`
-parent `git rev-parse branch~1`
+tree $(git rev-parse branch~1^{tree})
+parent $(git rev-parse branch~1)
 author $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
 committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
 
@@ -697,7 +697,7 @@ test_expect_success \
 ### series G
 ###
 
-old_branch=`git rev-parse --verify branch^0`
+old_branch=$(git rev-parse --verify branch^0)
 test_tick
 cat >input <<INPUT_END
 commit refs/heads/branch
@@ -719,8 +719,8 @@ test_expect_success 'G: verify pack' '
 
 test_expect_success \
 	'G: branch changed, but logged' \
-	'test $old_branch != `git rev-parse --verify branch^0` &&
-	 test $old_branch = `git rev-parse --verify branch@{1}`'
+	'test $old_branch != $(git rev-parse --verify branch^0) &&
+	 test $old_branch = $(git rev-parse --verify branch@{1})'
 
 ###
 ### series H
@@ -793,7 +793,7 @@ test_expect_success \
     'git fast-import --export-pack-edges=edges.list <input'
 
 cat >expect <<EOF
-.git/objects/pack/pack-.pack: `git rev-parse --verify export-boundary`
+.git/objects/pack/pack-.pack: $(git rev-parse --verify export-boundary)
 EOF
 test_expect_success \
 	'I: verify edge list' \
@@ -827,8 +827,8 @@ test_expect_success \
     'git fast-import <input'
 test_expect_success \
 	'J: branch has 1 commit, empty tree' \
-	'test 1 = `git rev-list J | wc -l` &&
-	 test 0 = `git ls-tree J | wc -l`'
+	'test 1 = $(git rev-list J | wc -l) &&
+	 test 0 = $(git ls-tree J | wc -l)'
 
 cat >input <<INPUT_END
 reset refs/heads/J2
@@ -869,8 +869,8 @@ test_expect_success \
     'git fast-import <input'
 test_expect_success \
     'K: verify K^1 = branch^1' \
-    'test `git rev-parse --verify branch^1` \
-		= `git rev-parse --verify K^1`'
+    'test $(git rev-parse --verify branch^1) \
+		= $(git rev-parse --verify K^1)'
 
 ###
 ### series L
@@ -959,7 +959,7 @@ test_expect_success \
 	git ls-tree L2 g/b/ >tmp &&
 	cat tmp | cut -f 2 >actual &&
 	test_cmp expect actual &&
-	git fsck `git rev-parse L2`'
+	git fsck $(git rev-parse L2)'
 
 git update-ref -d refs/heads/L2
 
@@ -1138,7 +1138,7 @@ INPUT_END
 test_expect_success \
 	'N: copy dirty subdirectory' \
 	'git fast-import <input &&
-	 test `git rev-parse N2^{tree}` = `git rev-parse N3^{tree}`'
+	 test $(git rev-parse N2^{tree}` = `git rev-parse N3^{tree})'
 
 test_expect_success \
 	'N: copy directory by id' \
@@ -1536,7 +1536,7 @@ INPUT_END
 test_expect_success \
 	'O: comments are all skipped' \
 	'git fast-import <input &&
-	 test `git rev-parse N3` = `git rev-parse O1`'
+	 test $(git rev-parse N3` = `git rev-parse O1)'
 
 cat >input <<INPUT_END
 commit refs/heads/O2
@@ -1557,7 +1557,7 @@ INPUT_END
 test_expect_success \
 	'O: blank lines not necessary after data commands' \
 	'git fast-import <input &&
-	 test `git rev-parse N3` = `git rev-parse O2`'
+	 test $(git rev-parse N3` = `git rev-parse O2)'
 
 test_expect_success \
 	'O: repack before next test' \
@@ -1602,8 +1602,8 @@ INPUT_END
 test_expect_success \
 	'O: blank lines not necessary after other commands' \
 	'git fast-import <input &&
-	 test 8 = `find .git/objects/pack -type f | wc -l` &&
-	 test `git rev-parse refs/tags/O3-2nd` = `git rev-parse O3^` &&
+	 test 8 = $(find .git/objects/pack -type f | wc -l) &&
+	 test $(git rev-parse refs/tags/O3-2nd` = `git rev-parse O3^) &&
 	 git log --reverse --pretty=oneline O3 | sed s/^.*z// >actual &&
 	 test_cmp expect actual'
 
@@ -1661,7 +1661,7 @@ mark :3
 data <<DATAEND
 [submodule "sub"]
 	path = sub
-	url = "`pwd`/sub"
+	url = "$(pwd)/sub"
 DATAEND
 
 commit refs/heads/subuse1
@@ -1717,7 +1717,7 @@ mark :1
 data <<DATAEND
 [submodule "sub"]
 	path = sub
-	url = "`pwd`/sub"
+	url = "$(pwd)/sub"
 DATAEND
 
 commit refs/heads/subuse2
@@ -1998,7 +1998,7 @@ test_expect_success \
 	'git cat-file blob refs/notes/foobar~2:$commit3 >actual && test_cmp expect actual'
 
 cat >expect <<EOF
-parent `git rev-parse --verify refs/notes/foobar~2`
+parent $(git rev-parse --verify refs/notes/foobar~2)
 author $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
 committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
 
@@ -2061,7 +2061,7 @@ test_expect_success \
 	'git cat-file blob refs/notes/foobar2:$commit1 >actual && test_cmp expect actual'
 
 cat >expect <<EOF
-parent `git rev-parse --verify refs/notes/foobar^`
+parent $(git rev-parse --verify refs/notes/foobar^)
 author $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
 committer $GIT_COMMITTER_NAME <$GIT_COMMITTER_EMAIL> $GIT_COMMITTER_DATE
 
