@@ -390,7 +390,7 @@ test_expect_success \
     'B: accept branch name "TEMP_TAG"' \
     'git fast-import <input &&
 	 test -f .git/TEMP_TAG &&
-	 test $(git rev-parse master` = `git rev-parse TEMP_TAG^)'
+	 test $(git rev-parse master) = $(git rev-parse TEMP_TAG^)'
 rm -f .git/TEMP_TAG
 
 git gc 2>/dev/null >/dev/null
@@ -1138,7 +1138,7 @@ INPUT_END
 test_expect_success \
 	'N: copy dirty subdirectory' \
 	'git fast-import <input &&
-	 test $(git rev-parse N2^{tree}` = `git rev-parse N3^{tree})'
+	 test $(git rev-parse N2^{tree}) = $(git rev-parse N3^{tree})'
 
 test_expect_success \
 	'N: copy directory by id' \
@@ -1536,7 +1536,7 @@ INPUT_END
 test_expect_success \
 	'O: comments are all skipped' \
 	'git fast-import <input &&
-	 test $(git rev-parse N3` = `git rev-parse O1)'
+	 test $(git rev-parse N3) = $(git rev-parse O1)'
 
 cat >input <<INPUT_END
 commit refs/heads/O2
@@ -1557,7 +1557,7 @@ INPUT_END
 test_expect_success \
 	'O: blank lines not necessary after data commands' \
 	'git fast-import <input &&
-	 test $(git rev-parse N3` = `git rev-parse O2)'
+	 test $(git rev-parse N3) = $(git rev-parse O2)'
 
 test_expect_success \
 	'O: repack before next test' \
@@ -1603,7 +1603,7 @@ test_expect_success \
 	'O: blank lines not necessary after other commands' \
 	'git fast-import <input &&
 	 test 8 = $(find .git/objects/pack -type f | wc -l) &&
-	 test $(git rev-parse refs/tags/O3-2nd` = `git rev-parse O3^) &&
+	 test $(git rev-parse refs/tags/O3-2nd) = $(git rev-parse O3^) &&
 	 git log --reverse --pretty=oneline O3 | sed s/^.*z// >actual &&
 	 test_cmp expect actual'
 
