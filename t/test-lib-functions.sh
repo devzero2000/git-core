@@ -455,7 +455,7 @@ test_external_without_stderr () {
 		fi
 	else
 		if [ "$verbose" = t ]; then
-			output=`echo; echo "# Stderr is:"; cat "$stderr"`
+			output=$(echo; echo "# Stderr is:"; cat "$stderr")
 		else
 			output=
 		fi
@@ -640,9 +640,9 @@ test_cmp_rev () {
 # similar to GNU seq(1), but the latter might not be available
 # everywhere (and does not do letters).  It may be used like:
 #
-#	for i in `test_seq 100`; do
-#		for j in `test_seq 10 20`; do
-#			for k in `test_seq a z`; do
+#	for i in $(test_seq 100); do
+#		for j in $(test_seq 10 20); do
+#			for k in $(test_seq a z); do
 #				echo $i-$j-$k
 #			done
 #		done
